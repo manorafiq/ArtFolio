@@ -1,1 +1,1 @@
-console.log("i'm javascript.");
+console.log("i'm javascript. and you are developer.");
