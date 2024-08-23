@@ -60,12 +60,15 @@ main {
 }
 
 /* IMAGE DIVS */
+.images {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-.images div {
-    background-color: blue;
-    height: 150px;
+.images img {
+    background-color: #e0e0e0;
     border-radius: 15px;
-    width: 1050px;
+    width: 300px;
 }
 
 .search_bar {
