@@ -71,10 +71,10 @@ main {
     border-radius: 15px;
 }
 
-.images .one {
+/* .images .one {
     transform: scale(1.2);
     transform-origin: 190% 25%;
-}
+} */
 
 .images .image_one {
     width: 200px;
