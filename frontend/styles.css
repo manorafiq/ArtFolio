@@ -71,11 +71,6 @@ main {
     border-radius: 15px;
 }
 
-/* .images .one {
-    transform: scale(1.2);
-    transform-origin: 190% 25%;
-} */
-
 .images .image_one {
     width: 200px;
     height: 200px;
@@ -85,7 +80,6 @@ main {
     top: 22%;
     left: 70%;
 }
-
 
 .images .two {
     transform: scale(1.5);
