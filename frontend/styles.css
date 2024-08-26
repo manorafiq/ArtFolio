@@ -35,29 +35,43 @@ nav a, .logo {
 main {
     padding: 32px;
 }
-#main_heading {
+.heading_one, .heading_two, .heading_three, .heading_four {
     margin-top: 2rem;
     font-size: 4.6rem;
     font-weight: 700;
 }
 
-#main_heading .turn .your {
+.heading_one .turn .your, .heading_two .turn .your, .heading_three .turn .your, .heading_four .turn .your {
     display: block;
 }
 
-#main_heading .goals {
+.heading_one .goals, .heading_two .turn .your, .heading_three .turn .your, .heading_four .turn .your {
     display: block;
 }
 
-#main_heading .goals > strong {
+.heading_one .goals > strong {
     color: #B9EB4E;
     /* font-size: 6rem; */
+}
+
+.heading_two .goals > strong {
+    color: #F35a6d;
+}
+
+.heading_three .goals > strong {
+    color: #FF9A00;
+}
+
+.heading_four .goals > strong {
+    color: #FFE500;
 }
 
 .hero_contianer {
     display: flex;
     justify-content: space-between;
 }
+
+
 
 /* IMAGE DIVS */
 .images {
