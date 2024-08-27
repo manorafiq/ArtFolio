@@ -35,23 +35,60 @@ nav a, .logo {
 main {
     padding: 32px;
 }
-#main_heading {
+
+.hero_text.disable {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease, visibility 0s linear 1s;
+}
+
+.hero_text.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1s ease;
+}
+
+.images img {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease, visibility 0s linear 1s;
+}
+
+.images img.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1s ease;
+}
+
+.heading_one, .heading_two, .heading_three, .heading_four {
     margin-top: 2rem;
     font-size: 4.6rem;
     font-weight: 700;
 }
 
-#main_heading .turn .your {
+.heading_one .turn .your, .heading_two .turn .your, .heading_three .turn .your, .heading_four .turn .your {
     display: block;
 }
 
-#main_heading .goals {
+.heading_one .goals, .heading_two .turn .your, .heading_three .turn .your, .heading_four .turn .your {
     display: block;
 }
 
-#main_heading .goals > strong {
+.heading_one .goals > strong {
     color: #B9EB4E;
     /* font-size: 6rem; */
+}
+
+.heading_two .goals > strong {
+    color: #F35a6d;
+}
+
+.heading_three .goals > strong {
+    color: #FF9A00;
+}
+
+.heading_four .goals > strong {
+    color: #FFE500;
 }
 
 .hero_contianer {
@@ -68,26 +105,66 @@ main {
 
 .images img {
     background-color: #e0e0e0;
-    border-radius: 15px;
     width: 300px;
+    border-radius: 15px;
 }
 
-.images .one  {
-    /* position: absolute;
-    transform: translate(0%); */
+.images .image_one {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    position: absolute;
+    top: 22%;
+    left: 70%;
 }
 
 .images .two {
-    position: absolute;
-    top: 50px;
-    z-index: ;
+    transform: scale(1.5);
+    z-index: 10;
 }
 
+.images .image_two {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    position: absolute;
+    left: 82%;
+    top: 25%;
+    z-index: -1;
+}
+
+.images .image_three {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    position: absolute;
+    top: 40%;
+    left: 83%;
+    z-index: 2;
+}
+
+.images .image_four {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    position: absolute;
+    top: 38%;
+    left: 71%;
+    z-index: 3;
+}
+
+/* SEARCH BAR */
 .search_bar {
     display: flex;
     justify-content: center;
     position: relative;
     bottom: 20px;
+    top: 80px;
+    /* margin-top: 80px; */
 }
 
 .search_input {
