@@ -61,14 +61,26 @@ main {
 
 /* IMAGE DIVS */
 .images {
-    display: flex;
-    flex-wrap: wrap;
+    /* display: flex;
+    flex-wrap: wrap; */
+    gap: 20px;
 }
 
 .images img {
     background-color: #e0e0e0;
     border-radius: 15px;
     width: 300px;
+}
+
+.images .one  {
+    /* position: absolute;
+    transform: translate(0%); */
+}
+
+.images .two {
+    position: absolute;
+    top: 50px;
+    z-index: ;
 }
 
 .search_bar {
@@ -94,7 +106,7 @@ main {
 footer {
     position: relative;
     bottom: 0px;
-    width: 100vw;
+    width: 100%;
     padding: 32px;
     background-color: black;
 }
