@@ -46,7 +46,7 @@ main {
     display: block;
 }
 
-.heading_one .goals, .heading_two .turn .your, .heading_three .turn .your, .heading_four .turn .your {
+.heading_one .goals, .heading_two .goals, .heading_three .goals, .heading_four .goals {
     display: block;
 }
 
