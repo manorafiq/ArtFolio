@@ -36,30 +36,6 @@ main {
     padding: 32px;
 }
 
-.hero_text.disable {
-    /* opacity: 0; */
-    visibility: hidden;
-    /* transition: opacity 1s ease, visibility 0s linear 1s; */
-}
-
-.hero_text.active {
-    /* opacity: 1; */
-    visibility: visible;
-    /* transition: opacity 1s ease; */
-}
-
-.images .image.disable {
-    /* opacity: 0; */
-    visibility: hidden;
-    /* transition: opacity 1s ease, visibility 0s linear 1s; */
-}
-
-.images image.active {
-    /* opacity: 1; */
-    visibility: visible;
-    /* transition: opacity 1s ease; */
-}
-
 .heading_one, .heading_two, .heading_three, .heading_four {
     margin-top: 2rem;
     font-size: 4.6rem;
@@ -108,6 +84,25 @@ main {
     border-radius: 15px;
 }
 
+.images .disable {
+    display: none;
+}
+
+.hero_text.disable {
+    display: none;
+}
+
+.hero_text.active {
+    display: block;
+}
+
+.images .image.disable {
+    display: none;
+}
+
+.images image.active {
+    display: flex;
+}
 .images .image_one {
     width: 200px;
     height: 200px;
