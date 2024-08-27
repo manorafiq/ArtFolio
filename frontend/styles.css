@@ -37,27 +37,27 @@ main {
 }
 
 .hero_text.disable {
-    opacity: 0;
+    /* opacity: 0; */
     visibility: hidden;
-    transition: opacity 1s ease, visibility 0s linear 1s;
+    /* transition: opacity 1s ease, visibility 0s linear 1s; */
 }
 
 .hero_text.active {
-    opacity: 1;
+    /* opacity: 1; */
     visibility: visible;
-    transition: opacity 1s ease;
+    /* transition: opacity 1s ease; */
 }
 
-.images img {
-    opacity: 0;
+.images .image.disable {
+    /* opacity: 0; */
     visibility: hidden;
-    transition: opacity 1s ease, visibility 0s linear 1s;
+    /* transition: opacity 1s ease, visibility 0s linear 1s; */
 }
 
-.images img.active {
-    opacity: 1;
+.images image.active {
+    /* opacity: 1; */
     visibility: visible;
-    transition: opacity 1s ease;
+    /* transition: opacity 1s ease; */
 }
 
 .heading_one, .heading_two, .heading_three, .heading_four {
