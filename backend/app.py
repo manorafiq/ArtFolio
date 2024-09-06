@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 # Connect to the SQLite database here
 
-@app.route("/", methods=['GET'])
+@app.route("/")
 def index():
     
-    render_template("index.html")
+    return render_template("index.html")
 
 
 # Run the Flask application in debug mode

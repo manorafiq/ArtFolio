@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/backend/static/styles.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
     <title>Footo</title>
   </head>
 
@@ -47,7 +50,10 @@
       <div class="images">
         <div class="image active">
           <div class="image_one">
-            <img src="/backend/assets/girl_photo.jpg" alt="Girl working on latptop." />
+            <img
+              src="/backend/assets/girl_photo.jpg"
+              alt="Girl working on latptop."
+            />
           </div>
           <div class="image_two">
             <img
@@ -147,7 +153,7 @@
           </div>
           <div class="image_four">
             <img
-              src="/backend/assets/happy_person.jpg"
+              src="{{url_for('static', filename='images/happy_person.jpg')}}"
               alt="A happy 
           person is smiling."
             />
@@ -181,6 +187,6 @@
         </div>
       </div>
     </footer>
-    <script src="/backend/static/script.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </body>
 </html>
