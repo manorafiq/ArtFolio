@@ -7,7 +7,7 @@
 }
 
 body {
-    background-image: url("./../assets/background_image.jpg");
+    background-image: url("images/background_image.jpg");
     background-repeat: no-repeat;
     background-size: 100%;
     font-family: "Inter", sans-serif;
@@ -165,7 +165,7 @@ main {
 .search_input {
     width: 800px;
     padding: 15px;
-    background: url("assets/search_icon.svg") no-repeat right 15px center;
+    background: url("images/search_icon.svg") no-repeat right 15px center;
     background-size: 30px 30px;
     border-radius: 50px;
     border: none;
