@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/login_singup.css" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content_wraper">
+        <h1 class="signup">Sign Up</h1>
+        <p class="sub-content">Provide email, password and Profession</p>
+        <form action="/signup" method="post" class="signup_form">
+          <div class="input_div">
+            <input
+              type="text"
+              placeholder="Full Name"
+              id="name"
+              name="full_name"
+            />
+          </div>
+          <div class="input_div">
+            <input
+              type="email"
+              placeholder="Email"
+              id="email"
+              name="email"
+              autocomplete="email"
+            />
+          </div>
+          <div class="input_div">
+            <input
+              type="password"
+              placeholder="Password"
+              id="password"
+              name="password"
+            />
+          </div>
+          <div class="input_div">
+            <input
+              type="text"
+              placeholder="Profession"
+              id="profession"
+              name="profession"
+            />
+          </div>
+          <button type="submit" class="singupBtn">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
