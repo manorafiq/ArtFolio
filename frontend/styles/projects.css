@@ -1,14 +1,32 @@
 .projects {
-    background-color: white;
-    margin-top: 50px;
     display: flex;
-    /* justify-content: left; */
-    margin-right: auto;
-    margin-left: auto;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 2rem;
     padding: 50px 0;
+    color: black;
 }
+
+.projects p {
+    color: gray;
+    font-size: 0.8rem;
+}
+
+.projects h3 {
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+.projects h3, p {
+    margin-left: 5px;
+    line-height: 1.2;
+}
+
+.content_section {
+    background-color: white;
+    margin-top: 50px;
+}
+
 .content_img img {
     border-radius: 24px;
     background-repeat: no-repeat;
