@@ -25,6 +25,26 @@ nav {
   font-size: 1.2rem;
   font-weight: 700;
 }
+/* Nav Bar */
+/* Navbar - Fixed on scroll */
+.nav_bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  background: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.nav_bar.sticky {
+  background: white;
+  color: black;
+}
+
+.nav_bar.sticky a,
+.nav_bar.sticky .logo {
+  color: black;
+}
 
 nav a,
 .logo {
