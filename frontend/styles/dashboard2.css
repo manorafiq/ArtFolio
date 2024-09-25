@@ -150,6 +150,7 @@ name {
     background-color: #d3d3d3;
     border-radius: 15px;
     padding: 20px;
+    
 }
 
 .project-buttons {
@@ -172,11 +173,12 @@ name {
 }
 .project-card {
     background-color: white;
-    padding: 20px;
+    padding: 10px 50px;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
 
 .project-image {
