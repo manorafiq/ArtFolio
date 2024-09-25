@@ -76,7 +76,7 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     # Clear any existing session data
-    session.clear()
+    # session.clear()
 
     # Display a logout message if the request includes a logout parameter
     if request.args.get('logout'):
@@ -91,18 +91,18 @@ def login():
         # Check if email and password are provided
         if not email or not password:
             flash_message("Provide required Fields to Log In!", category='error')
-            return render_template("login.html")
+            return redirect("/login")
 
         # Retrieve user data from the database based on the provided email
-        student = db.execute("SELECT * FROM students WHERE email = ?", email)
+        user = db.execute("SELECT * FROM users WHERE email = ?", email)
 
         # Check if the user exists and the password is correct
-        if not student or not check_password_hash(student[0]["password"], password):
+        if not user or not check_password_hash(user[0]["password"], password):
             flash_message("Invalid email or password!", category='error')
-            return render_template("login.html")
+            return ("login.html")
 
         # Store the user ID in the session for authentication
-        session["user_id"] = student[0]["id"]
+        session["user_id"] = user[0]["id"]
         # Display a success message and redirect to the homepage
         flash_message("Log In Successful!", category='success')
         return redirect(url_for("index"))
@@ -115,7 +115,7 @@ def login():
 @login_required
 def logout():
     # Clear the session data
-    session.clear()
+    # session.clear()
     # Redirect to the login page with a logout parameter
     return redirect(url_for('login', logout=True))
 
