@@ -1,8 +1,8 @@
 # Import necessary modules
 import os
 import requests
-# from flask import jsonify
-from flask import Flask, request, redirect, url_for, render_template, session
+from flask import Flask, request, redirect, url_for, render_template, session, jsonify
+import json
 # from flask_session import Session
 from cs50 import SQL
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -26,7 +26,7 @@ def index():
     # Retrieve assignments for the logged-in student
     # assignment = db.execute("SELECT * FROM assignment WHERE student_id = ?", session["user_id"])
     # Render the homepage template with assignment data
-    return {"Default:": "home route"}
+    return jsonify([{"Default:": "home route"}])
 
 # Define route for user signup
 @app.route("/signup", methods=["GET", "POST"])
