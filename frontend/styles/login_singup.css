@@ -1,46 +1,95 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: #F2E3B6;
+  background-color: #f2e3b6;
+  font-family: sans-serif;
+  text-align: center;
 }
 
 .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-top: 16px;
-    padding: 0 80px 80px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 2.5rem;
+  padding: 0 80px 80px;
 }
 
 .content_wraper {
-    padding: 32px;
-    border-radius: 1.5rem; /* 1.5rem = 24px */
-    text-align: center;
-    max-width: 24rem;
+  padding: 32px;
+  border-radius: 1.5rem; /* 1.5rem = 24px */
+  text-align: center;
+  max-width: 24rem;
 }
 
-.login, .signup {
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 40px;
-    margin-bottom: 1rem;
+.login,
+.signup {
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 40px;
+  margin-bottom: 2rem;
 }
-.sub-content {}
-.login_form {}
-.input_div {}
+.sub-content {
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+/* .login_form {
+    
+} */
+.input_div {
+  margin-bottom: 1rem;
+}
 .input_div > input {
-
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  outline: none;
+  border-radius: 9999px;
 }
-.loginBtn, .singupBtn {}
+
+.input_div > input:hover {
+  background-color: #f2f2f2;
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+.input_div > input:focus {
+  outline: none;
+}
+
+.loginBtn,
+.singupBtn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 9999px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.loginBtn:hover,
+.singupBtn:hover {
+  background-color: #2563eb;
+}
+
+.loginBtn:focus,
+.singupBtn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  background-color: #1d4ed8;
+}
 
 @media (min-width: 768px) {
-    .login, .singup {
-        font-size: 48px;
-        line-height: 1;
-    }
+  .login,
+  .singup {
+    font-size: 48px;
+    line-height: 1;
+  }
 }
