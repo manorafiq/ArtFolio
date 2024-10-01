@@ -6,7 +6,7 @@ import json
 # from flask_session import Session
 from cs50 import SQL
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import flash_message, login_required, generate_secret_key, validate_class_name, check_required_fields, get_data_from_db, get_class_timing, get_exam_schedules
+from helpers import flash_message, login_required, generate_secret_key, validate_profession_name, check_required_fields, get_data_from_db
 
 # Create a Flask web application instance
 app = Flask(__name__)
@@ -47,10 +47,9 @@ def signup():
         if result:
             return result
 
-        # Validate the format of the class name
-        # if not validate_class_name(class_name):
-        #     flash_message("Class Name must adhere to the specified convention. i.e(CS50, CS or any acronym)", category='info')
-        #     return render_template("signup.html")
+        # Validate the format of the profession name
+        if not validate_profession_name(profession):
+            return {"validate_proffesion_name": "Profession Name must adhere to the specified convention. i.e(designer, Artist or Engineer)", "category": 'info'}
 
         # Check if the provided email already exists in the database
         email_exists = db.execute("SELECT * FROM users WHERE email = ?", email)
