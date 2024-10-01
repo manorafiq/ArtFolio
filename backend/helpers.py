@@ -20,11 +20,11 @@ def check_required_fields(fields):
     return None
 
 
-def validate_class_name(class_name):
-    # Validate Class Name using a regular expression
-    class_name_pattern = re.compile(r'^[A-Za-z0-9_\-]+$')
+def validate_professional_name(professional_name):
+    # Validate professional Name using a regular expression
+    professional_name_pattern = re.compile(r'^[A-Za-z0-9_\-]+$')
     
-    return class_name_pattern.match(class_name)
+    return professional_name_pattern.match(professional_name)
 
 # i want to show sign up page for those who are not at our data base as student/teacher/admin whiAch can do using login-required i guess lets see
 
