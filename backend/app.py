@@ -2,16 +2,43 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 from cs50 import SQL
-from helpers import generate_secret_key, validate_profession_name, check_required_fields, get_data_from_db
+from helpers import validate_profession_name, check_required_fields, get_data_from_db, token_required
+#generate_secret_key,
+from werkzeug.utils import secure_filename
+import os
+
+UPLOAD_FOLDER = 'uplaods'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = generate_password_hash(64)
 db = SQL("sqlite:///footo.db")
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route("/api/upload", methods=["POST"])
+@token_required
+def upload_image():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    if not allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return jsonify({"message": "File uploaded successfully", 'filename': filename}), 200
+    return jsonify({"error": "File type not allowed"}), 400
+
+
 @app.route("/api/singup", methods=["POST"])
+@token_required
 def singup():
     data = request.json
     full_name = data.get("full_name")
@@ -55,6 +82,7 @@ def login():
 
 
 @app.route("/api/porjects", methods=["GET"])
+@token_required
 def projects():
     user_projects = get_data_from_db(db, None, "SELECT * FROM projects", "shown_projects")
     return jsonify(user_projects)

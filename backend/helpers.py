@@ -1,10 +1,12 @@
 # helpers.py
-from flask import session, redirect, flash, url_for, render_template
+from flask import jsonify, session, redirect, flash, url_for, request
 from functools import wraps
 from cs50 import SQL
 import secrets, re
 import random
-from flask import jsonify
+
+
+db = SQL("sqlite:///footo.db")
 
 def flash_message(message, category='default'):
     # flash(message, category=category)
@@ -31,14 +33,34 @@ def validate_profession_name(profession_name):
     return profession_name_pattern.match(profession_name)
 
 
-# login required function
-def login_required(f):
+def token_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-    return decorated_function
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+
+        if not token:
+            return jsonify({"error_message": "Token is missing!"}), 401
+        
+        try:
+            user = db.execute("SELECT * FROM users WHERE id = ?", token)
+            if not user:
+                raise ValueError('Invalid token')
+        except:
+            return jsonify({ "message": "Token is invalid!"}), 401
+        
+        return f(user[0], *args, **kwargs)
+    
+    return decorated
+
+
+# login required function
+# def login_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session.get("user_id") is None:
+#             return redirect(url_for("login"))
+#         return f(*args, **kwargs)
+#     return decorated_function
 
 # Generating secret key for session
 def generate_secret_key(length=32):
