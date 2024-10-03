@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 from cs50 import SQL
-from helpers import validate_profession_name, check_required_fields, get_data_from_db, token_required
+from helpers import validate_profession_name, check_required_fields, get_data_from_db, token_required, generate_secret_key
 #generate_secret_key,
 from werkzeug.utils import secure_filename
 import os
@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = generate_password_hash(64)
+app.config['SECRET_KEY'] = generate_secret_key(64)
 db = SQL("sqlite:///footo.db")
 
 def allowed_file(filename):
@@ -37,34 +37,36 @@ def upload_image():
     return jsonify({"error": "File type not allowed"}), 400
 
 
-@app.route("/api/singup", methods=["POST"])
-@token_required
+@app.route("/signup", methods=["GET", "POST"])
+# @token_required
 def singup():
-    data = request.json
-    full_name = data.get("full_name")
-    email = data.get("email")
-    password = data.get("password")
-    profession = data.get("profession")
+    if request.method == "POST":
+        data = request.json
+        full_name = data.get("full_name")
+        email = data.get("email")
+        password = data.get("password")
+        profession = data.get("profession")
 
-    result = check_required_fields({"Full Name": full_name, "Email": email, "Paswwrod": password, "Profession": profession})
+        result = check_required_fields({"Full Name": full_name, "Email": email, "Paswwrod": password, "Profession": profession})
 
-    if result: 
-        return jsonify(result), 400
-    
-    if not validate_profession_name(profession):
-        return jsonify({"error": "Invalid profession name"}), 400
-    
-    email_exists = db.execute("SELECT * FROM users WHERE email = ?", email)
-    if email_exists:
-        return jsonify({"error": "Email already exists"}), 400
-    
-    hash_password = generate_password_hash(password)
-    db.execute("INSERT INTO users (name, email, password, profession) VALUES(?, ?, ?, ?)", full_name, email, hash_password, profession)
+        if result: 
+            return jsonify(result), 400
+        
+        if not validate_profession_name(profession):
+            return jsonify({"error": "Invalid profession name"}), 400
+        
+        email_exists = db.execute("SELECT * FROM users WHERE email = ?", email)
+        if email_exists:
+            return jsonify({"error": "Email already exists"}), 400
+        
+        hash_password = generate_password_hash(password)
+        db.execute("INSERT INTO users (full_name, email, password_hash, profession) VALUES(?, ?, ?, ?)", full_name, email, hash_password, profession)
 
-    return jsonify({"message": "Singup successfully"}), 201
+        return jsonify({"message": "Singup successfully"}), 201
+    return jsonify({"error": "Invalid request"}), 400
 
 
-@app.route("/api/login", methods=["POST"])
+@app.route("/login", methods=["POST"])
 def login():
     data = request.json
     email = data.get("email")
