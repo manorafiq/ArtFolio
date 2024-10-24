@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           // Store user_id in LocalStorage or sessionStorage
           localStorage.setItem("user_id", data.user_id);
-          window.location.href = "/dashboard.html";
+          window.location.href = "basicDashBoard.html";
         } else {
           alert(data.error);
         }

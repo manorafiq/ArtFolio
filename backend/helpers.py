@@ -12,7 +12,7 @@ def flash_message(message, category='default'):
     # flash(message, category=category)
     flash((message, category), category=category)
 
-def check_required_fields(fields, current_page):
+def check_required_fields(fields):
     missing_fields = [field for field, value in fields.items() if not value]
 
     # If fields missing then show message
@@ -20,7 +20,7 @@ def check_required_fields(fields, current_page):
         for field in missing_fields:
             flash_message(f"{field.capitalize()} is required.", category='error')
         # return render_template(f"{current_page}.html")
-        return jsonify()
+        return jsonify({})
 
     # Give us None in return if all good
     return None

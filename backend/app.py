@@ -1,94 +1,186 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from werkzeug.security import check_password_hash, generate_password_hash
+# from helpers import check_required_fields, validate_profession_name
 from cs50 import SQL
-from helpers import validate_profession_name, check_required_fields, get_data_from_db, token_required, generate_secret_key
-#generate_secret_key,
-from werkzeug.utils import secure_filename
-import os
+from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 
-UPLOAD_FOLDER = 'uplaods'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app = Flask("__name__")
 
-
-app = Flask(__name__)
+db = SQL("sqlite:///footo.db")
 CORS(app) # Enable CORS for all routes
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = generate_secret_key(64)
-db = SQL("sqlite:///footo.db")
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-@app.route("/api/upload", methods=["POST"])
-@token_required
-def upload_image():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-    if not allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return jsonify({"message": "File uploaded successfully", 'filename': filename}), 200
-    return jsonify({"error": "File type not allowed"}), 400
-
-
 @app.route("/signup", methods=["GET", "POST"])
-# @token_required
-def singup():
+def signup():
     if request.method == "POST":
         data = request.json
+
         full_name = data.get("full_name")
         email = data.get("email")
         password = data.get("password")
         profession = data.get("profession")
 
-        result = check_required_fields({"Full Name": full_name, "Email": email, "Paswwrod": password, "Profession": profession})
+        # full_name = request.form.get("full_name")
+        # email = request.form.get("email")
+        # password = request.form.get("password")
+        # profession = request.form.get("profession")
 
-        if result: 
-            return jsonify(result), 400
+        # result = check_required_fields({"Full Name": full_name, "Email": email, "Password": password, "Profession": profession})
+
+        # if result:
+        #     return jsonify(result), 400
         
-        if not validate_profession_name(profession):
-            return jsonify({"error": "Invalid profession name"}), 400
+        # if not validate_profession_name(profession):
+        #     return jsonify({"error": "Invalid profession name"}), 400
         
         email_exists = db.execute("SELECT * FROM users WHERE email = ?", email)
+
         if email_exists:
             return jsonify({"error": "Email already exists"}), 400
         
-        hash_password = generate_password_hash(password)
-        db.execute("INSERT INTO users (full_name, email, password_hash, profession) VALUES(?, ?, ?, ?)", full_name, email, hash_password, profession)
+        # hash_password = generate_password_hash(password)
+        
+        db.execute("INSERT INTO users (full_name, email, password_hash, profession) VALUES(?, ?, ?, ?)", full_name, email, password, profession)
 
-        return jsonify({"message": "Singup successfully"}), 201
+        return jsonify({"message": "Signup successfully"}), 201
+    
+    # If GET requests return error
     return jsonify({"error": "Invalid request"}), 400
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    data = request.json
-    email = data.get("email")
-    password = data.get("password")
-
-    if not email or not password:
-        return jsonify({"error": "Email and password are required"}), 400
     
-    user = db.execute("SELECT * FROM users WHERE email = ?", email)
+    # Handle POST request for user login
+    if request.method == "POST":
+        data = request.json
+        email = data.get("email")
+        password = data.get("password")
 
-    if not user or not check_password_hash(user[0]["password"], password):
-        return jsonify({"error": "Invalid email or password"}), 401
+        # email = request.form.get("email")
+        # password = request.form.get("password")
+
+        if not email or not password:
+            return jsonify({"error": "Email and password are required"}), 400
+        
+        user = db.execute("SELECT * FROM users WHERE email = ?", email)
+
+        # if not user or not check_password_hash(user[0]["password"], password):
+        pas = password == user[0]["password_hash"]
+        if not user or not pas:
+            return jsonify({"error": "Invalid email or password"}), 401
+        
+        return jsonify({"message": "Login successful", "user_id": user[0]["id"]}), 200
     
-    return jsonify({"message": "Login successful", "user_id": user[0]["id"]}), 200
+    # Get request send error message
+    return jsonify({"error": "Invalid request"}), 400
 
 
-@app.route("/api/porjects", methods=["GET"])
-@token_required
-def projects():
-    user_projects = get_data_from_db(db, None, "SELECT * FROM projects", "shown_projects")
-    return jsonify(user_projects)
+# Define route for user logout
+@app.route("/logout")
+@login_required
+def logout():
+    # Clear the session data
+    # session.clear()
+    # Redirect to the login page with a logout parameter
+    return redirect(url_for('login', logout=True))
 
+
+
+# Run the Flask application in debug mode
+if __name__ == '__main__':
+    app.run(debug=True)
+
+# from flask import Flask, request, jsonify
+# from flask_cors import CORS
+# from werkzeug.security import check_password_hash, generate_password_hash
+# from cs50 import SQL
+# from helpers import validate_profession_name, check_required_fields, get_data_from_db, token_required, generate_secret_key
+# #generate_secret_key,
+# from werkzeug.utils import secure_filename
+# import os
+
+# UPLOAD_FOLDER = 'uplaods'
+# ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+# app = Flask(__name__) *****
+# CORS(app) # Enable CORS for all routes
+
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# app.config['SECRET_KEY'] = generate_secret_key(64)
+# db = SQL("sqlite:///footo.db") *****
+
+# def allowed_file(filename):
+#     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# /***************
+# @app.route("/api/upload", methods=["POST"])
+# @token_required
+# def upload_image():
+#     if 'file' not in request.files:
+#         return jsonify({"error": "No file part"}), 400
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({"error": "No selected file"}), 400
+#     if not allowed_file(file.filename):
+#         filename = secure_filename(file.filename)
+#         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#         return jsonify({"message": "File uploaded successfully", 'filename': filename}), 200
+#     return jsonify({"error": "File type not allowed"}), 400
+
+
+# @app.route("/signup", methods=["GET", "POST"])
+# # @token_required
+# def singup():
+#     if request.method == "POST":
+#         data = request.json
+#         full_name = data.get("full_name")
+#         email = data.get("email")
+#         password = data.get("password")
+#         profession = data.get("profession")
+
+#         result = check_required_fields({"Full Name": full_name, "Email": email, "Paswwrod": password, "Profession": profession})
+
+#         if result: 
+#             return jsonify(result), 400
+        
+#         if not validate_profession_name(profession):
+#             return jsonify({"error": "Invalid profession name"}), 400
+        
+#         email_exists = db.execute("SELECT * FROM users WHERE email = ?", email)
+#         if email_exists:
+#             return jsonify({"error": "Email already exists"}), 400
+        
+#         hash_password = generate_password_hash(password)
+#         db.execute("INSERT INTO users (full_name, email, password_hash, profession) VALUES(?, ?, ?, ?)", full_name, email, hash_password, profession)
+
+#         return jsonify({"message": "Singup successfully"}), 201
+#     return jsonify({"error": "Invalid request"}), 400
+
+
+# @app.route("/login", methods=["POST"])
+# def login():
+#     data = request.json
+#     email = data.get("email")
+#     password = data.get("password")
+
+#     if not email or not password:
+#         return jsonify({"error": "Email and password are required"}), 400
+    
+#     user = db.execute("SELECT * FROM users WHERE email = ?", email)
+
+#     if not user or not check_password_hash(user[0]["password"], password):
+#         return jsonify({"error": "Invalid email or password"}), 401
+    
+#     return jsonify({"message": "Login successful", "user_id": user[0]["id"]}), 200
+
+
+# @app.route("/api/porjects", methods=["GET"])
+# @token_required
+# def projects():
+#     user_projects = get_data_from_db(db, None, "SELECT * FROM projects", "shown_projects")
+#     return jsonify(user_projects)
+# *****/
 # # Import necessary modules
 # import os
 # import requests
