@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/basicDashBoard.css" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav_bar">
+        <div class="logo">Footo</div>
+        <div class="search_bar" id="search">
+          <input
+            autofocus
+            type="search"
+            placeholder="Search..."
+            class="search_input"
+          />
+        </div>
+        <div class="profile">
+          <div class="profile_menu"></div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="layout_container">
+        <!-- Details Section -->
+        <div class="details">
+          <div class="user_details">
+            <div class="add_image">
+              <div class="add_button">
+                <img src="./assets/details_btn.svg" alt="" />
+              </div>
+              <div class="user_name">Jhon Smith</div>
+            </div>
+            <div class="edit_profile">
+              <div>Edit Your Profile</div>
+            </div>
+            <div class="add_email">
+              <div>Email</div>
+            </div>
+          </div>
+          <div class="border_line"></div>
+          <div class="social-section">
+            <p class="social_label">Social Links</p>
+            <div class="social-handles">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png"
+                alt="LinkedIn"
+              />
+              <img
+                src="/frontend/assets/twitter.svg"
+                alt="WhatsApp"
+              />
+              
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                alt="Facebook"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+                alt="Instagram"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Projects Section -->
+        <div class="projects">
+          <div class="tabs">
+            <div class="project_tab active">projects</div>
+          </div>
+          <div class="project_card">
+            <div class="add_button">
+              <img src="./assets/create_project_btn.svg" alt="" />
+            </div>
+            <div class="create_button">Create a Project</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
