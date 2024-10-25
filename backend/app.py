@@ -1,16 +1,38 @@
-from flask import Flask, request, jsonify
-# from helpers import check_required_fields, validate_profession_name
+from flask import Flask, request, jsonify, redirect, url_for, session, jsonify
+from helpers import login_required, generate_secret_key, check_required_fields, validate_profession_name, save_image
+from flask_session import Session
 from cs50 import SQL
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask("__name__")
 
+# Configure session settings
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+app.secret_key = generate_secret_key(64)
+Session(app)
+
 db = SQL("sqlite:///footo.db")
 CORS(app) # Enable CORS for all routes
 
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        data = request.json
+
+    # If GET requests Send projects data by default
+    projects = db.execute("SELECT * FROM projects WHERE user_id = ?", session["user_id"])
+
+    return jsonify({"projects": projects}), 200
+
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    # Clear any existing session data
+    session.clear()
+    
+    # Handle POST request for user signup
     if request.method == "POST":
         data = request.json
 
@@ -19,36 +41,37 @@ def signup():
         password = data.get("password")
         profession = data.get("profession")
 
-        # full_name = request.form.get("full_name")
-        # email = request.form.get("email")
-        # password = request.form.get("password")
-        # profession = request.form.get("profession")
+        result = check_required_fields({"Full Name": full_name, "Email": email, "Password": password, "Profession": profession})
 
-        # result = check_required_fields({"Full Name": full_name, "Email": email, "Password": password, "Profession": profession})
-
-        # if result:
-        #     return jsonify(result), 400
+        if result:
+            return jsonify(result), 400
         
-        # if not validate_profession_name(profession):
-        #     return jsonify({"error": "Invalid profession name"}), 400
+        if not validate_profession_name(profession):
+            return jsonify({"flash_message": "Invalid profession name"}), 400
         
         email_exists = db.execute("SELECT * FROM users WHERE email = ?", email)
 
         if email_exists:
-            return jsonify({"error": "Email already exists"}), 400
+            return jsonify({"flash_message": "Email already exists"}), 400
         
-        # hash_password = generate_password_hash(password)
+        hash_password = generate_password_hash(password)
         
-        db.execute("INSERT INTO users (full_name, email, password_hash, profession) VALUES(?, ?, ?, ?)", full_name, email, password, profession)
+        db.execute("INSERT INTO users (full_name, email, password_hash, profession) VALUES(?, ?, ?, ?)", full_name, email, hash_password, profession)
 
         return jsonify({"message": "Signup successfully"}), 201
     
     # If GET requests return error
-    return jsonify({"error": "Invalid request"}), 400
+    return jsonify({"flash_message": "Invalid request"}), 400
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # Clear any existing session data
+    session.clear()
+
+    # Display a logout message if the request includes a logout parameter
+    if request.args.get('logout'):
+        return jsonify({"flash_message": "You're logged out!"}), 200
     
     # Handle POST request for user login
     if request.method == "POST":
@@ -56,23 +79,24 @@ def login():
         email = data.get("email")
         password = data.get("password")
 
-        # email = request.form.get("email")
-        # password = request.form.get("password")
-
         if not email or not password:
-            return jsonify({"error": "Email and password are required"}), 400
+            return jsonify({"flash_message": "Email and password are required"}), 400
         
         user = db.execute("SELECT * FROM users WHERE email = ?", email)
 
-        # if not user or not check_password_hash(user[0]["password"], password):
-        pas = password == user[0]["password_hash"]
-        if not user or not pas:
-            return jsonify({"error": "Invalid email or password"}), 401
+        if not user or not check_password_hash(user[0]["password"], password):
+        # pas = password == user[0]["password_hash"]
+        # if not user or not pas:
+            return jsonify({"flash_message": "Invalid email or password"}), 401
         
-        return jsonify({"message": "Login successful", "user_id": user[0]["id"]}), 200
+        # Store the user ID in the session for authentication
+        session["user_id"] = user[0]["id"]
+        
+        # Return success message and user ID
+        return jsonify({"flash_message": "Login successful", "user_id": user[0]["id"]}), 200
     
     # Get request send error message
-    return jsonify({"error": "Invalid request"}), 400
+    return jsonify({"flash_message": "Invalid request"}), 400
 
 
 # Define route for user logout
@@ -80,11 +104,103 @@ def login():
 @login_required
 def logout():
     # Clear the session data
-    # session.clear()
+    session.clear()
+
     # Redirect to the login page with a logout parameter
     return redirect(url_for('login', logout=True))
 
+# @app.route("/projects", methods=['GET', 'POST'])
+# @login_required
+# def projects():
+#     # Handle POST request for creating projects
+#     if request.method == "POST":
+#         data = request.json
+#         title = data.get("title")
+#         description = data.get("description")
+#         category = data.get("category")
+#         image_path = data.get("image_path")
 
+#         if not check_required_fields({"title": title, "description": description, "category": category, "image_path": image_path}):
+#             return jsonify({"flash_message": "Missing required fields"}), 400
+        
+#         if not validate_profession_name(category):
+#             return jsonify({"flash_message": "Invalid category"}), 400
+        
+#         db.execute("INSERT INTO projects (user_id, title, description, category) VALUES(?,?,?,?)", session["user_id"], title, description, category)
+
+#         db.execute("INSERT INTO images (file_path) VALUES(?)", image_path)
+
+#         return jsonify({"flash_message": "Project created successfully"}), 201
+    
+#     # Handle GET request for user's projects at dashbarod
+#     if request.method == "GET":
+#         # projects = get_data_from_db(db, session, "SELECT * FROM projects WHERE user_id =?", session["user_id"])
+
+
+#         return jsonify({"projects": projects}), 200
+
+
+@app.route("/projects", methods=['GET', 'POST'])
+@login_required
+def projects():
+    if request.method == "POST":
+        # Check if the post request has the file part
+        if 'image' not in request.files:
+            return jsonify({"flash_message": "No image file provided"}), 400
+            
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({"flash_message": "No selected file"}), 400
+            
+        # Get other form data
+        title = request.form.get("title")
+        description = request.form.get("description")
+        category = request.form.get("category")
+        
+        if not all([title, description, category]):
+            return jsonify({"flash_message": "Missing required fields"}), 400
+        
+        if not validate_profession_name(category):
+            return jsonify({"flash_message": "Invalid category"}), 400
+            
+        # Save the image
+        image_data = save_image(file)
+        if not image_data:
+            return jsonify({"flash_message": "Failed to save image"}), 400
+            
+        # First create the project
+        project_id = db.execute(
+            "INSERT INTO projects (user_id, title, description, category) VALUES(?,?,?,?) RETURNING id",
+            session["user_id"], title, description, category
+        )
+        
+        # Then save the image details
+        db.execute("""
+            INSERT INTO images (project_id, file_name, file_path, file_size, file_type, is_cover_image) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, 
+            project_id[0]['id'],
+            image_data['file_name'],
+            image_data['file_path'],
+            image_data['file_size'],
+            image_data['file_type'],
+            True  # First image is cover image
+        )
+        
+        return jsonify({"flash_message": "Project created successfully"}), 201
+    
+    # Handle GET request
+    if request.method == "GET":
+        # Get projects with their cover images
+        projects = db.execute("""
+            SELECT p.*, i.file_path as cover_image_path 
+            FROM projects p 
+            LEFT JOIN images i ON p.id = i.project_id AND i.is_cover_image = 1
+            WHERE p.user_id = ?
+        """, session["user_id"])
+        
+        return jsonify({"projects": projects}), 200
+    
 
 # Run the Flask application in debug mode
 if __name__ == '__main__':
